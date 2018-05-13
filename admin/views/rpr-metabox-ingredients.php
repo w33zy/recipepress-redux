@@ -23,27 +23,26 @@ wp_nonce_field( 'rpr_save_recipe_meta', 'rpr_nonce' );
 ?>
 
 <script type="text/javascript">
-<?php
-	$ingredients = get_terms( 'rpr_ingredient', array( 'orderby'=> 'name', 'order' => 'ASC' ) );
-	$inglist = array();
-	foreach( $ingredients as $ing ){
-		array_push( $inglist, $ing->name );
-	}
-?>
-    /*var ingredients = ;	*/
-	var haystack = <?php echo json_encode( $inglist ); ?>;
-jQuery(document).on("focusin", ".rpr-ing-name-input", function(){
-	window.console.log(this.name);
-	jQuery(this).autocomplete({
-        source: haystack,
-        minLength: 2,
-		autoFocus: true
+    <?php
+        $ingredients = get_terms( 'rpr_ingredient', array( 'orderby'=> 'name', 'order' => 'ASC' ) );
+        $inglist = array();
+        foreach( $ingredients as $ing ){
+            $inglist[] = $ing->name;
+        }
+    ?>
+        /*var ingredients = ;	*/
+    var haystack = <?php echo json_encode( $inglist ); ?>;
+    jQuery(document).on("focusin", ".rpr-ing-name-input", function () {
+        window.console.log(this.name);
+        jQuery(this).autocomplete({
+            source: haystack,
+            minLength: 2,
+            autoFocus: true
+        });
     });
-});
-jQuery(document).on("focusout", ".rpr-ing-name-input", function(){
-		jQuery(this).autocomplete("destroy");
-
-});
+    jQuery(document).on("focusout", ".rpr-ing-name-input", function () {
+        jQuery(this).autocomplete("destroy");
+    });
 </script>
 
 <table width="100%" cellspacing="5" class="rpr-metabox-table ingredients" id="recipe-ingredients">

@@ -356,44 +356,32 @@ class RPR_Public {
 	 * Render a list of all terms of a taxonomy using the layout's taxonomy.php file
 	 * 
 	 * @since 0.8.0
-	 * @param type $taxonomy
-	 * @param type $headers
-	 * @return string $content
+	 * @param string    $taxonomy
+	 * @param bool      $headers
+	 * @return string   $content
 	 */
-	private function render_taxlist( $taxonomy, $headers=false ) {
-		/**
-		 * Create empty output variable
-		 */
-		$output = '';
+	private function render_taxlist( $taxonomy, $headers = false ) {
+
+		// Get the layout's include path
+		$include_path = $this->get_the_layout() . 'taxonomy.php';
 		
-		// Get the layout's includepath
-		$includepath = $this->get_the_layout() . 'taxonomy.php';
-		
-		if( !file_exists( $includepath ) ){
+		if( ! file_exists( $include_path ) ) {
 			// If the layout does not provide an taxonomy file, use the default one:
-			$includepath = plugin_dir_path( __FILE__ ) . 'layouts/rpr_default/taxonomy.php';
+			$include_path = plugin_dir_path( __FILE__ ) . 'layouts/rpr_default/taxonomy.php';
 		}
 
-		/**
-		 * Set recipe_post to false for template tags
-		 */
+		// Set recipe_post to false for template tags
 		$recipe_post = false;
+		$terms = false;
 			
-		if( $taxonomy != 'n/a' && $taxonomy != '' ){
-			/**
-			 * get the terms of the selected taxonomy
-			 */
+		if ( $taxonomy !== 'n/a' && $taxonomy !== '' ) {
+			 // get the terms of the selected taxonomy
 			$terms = get_terms( $taxonomy, array( 'orderby'=> 'name', 'order' => 'ASC' ) );
-		} else {
-			/**
-			 * Set $terms to false for the layout and it's error messages
-			 */
-			$terms = false;
 		}
-		
+
 		// Include the taxonomy file:
-		include_once( dirname( __FILE__ ) . '/rpr_template_tags.php' );
-		include( $includepath );
+		include_once __DIR__ . '/rpr_template_tags.php';
+		include $include_path;
 		// and render the content using that file:
 		$content = ob_get_contents();
 		

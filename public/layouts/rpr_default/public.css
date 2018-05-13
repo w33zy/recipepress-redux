@@ -170,9 +170,35 @@ ul.rpr_alphabet_navigation li {
 	clear: left;
 }
 
-ul.rpr_taxlist {
-	list-style: none;
+.rpr_taxlist {
 	margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+
+.rpr_taxlist_item {
+    margin: 0 2% 15px 0;
+    flex: 1 1 22%;
+    min-width: 150px;
+}
+
+.rpr_taxlist_container {
+    text-align: center;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.rpr_taxlist_container a img {
+    margin: 0;
+}
+
+.rpr_taxlist_container a h5 {
+    padding: 10px 0;
+}
+
+.rpr_taxlist_item:nth-child(4n+4) {
+    margin: 0;
 }
 
 /* print link */

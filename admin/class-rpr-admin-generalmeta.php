@@ -92,7 +92,7 @@ class RPR_Admin_GeneralMeta {
 	public function do_metabox_description( $recipe ) {
 		$description = get_post_meta( $recipe->ID, "rpr_recipe_description", true );
 		$options = array(
-			'textarea_rows' => 4
+			'textarea_rows' => 32
 		);
 	    $options['media_buttons'] = true;
 
@@ -130,22 +130,22 @@ class RPR_Admin_GeneralMeta {
          * Get a list of all available units from the options. 
          * @since 0.8.0
          */
-        public function get_the_serving_unit_selection( $selected="" ) {
+        public function get_the_serving_unit_selection( $selected = '' ) {
             $units = AdminPageFramework::getOption( 'rpr_options', array( 'units', 'serving_units') , false );
-            $outp = "";
+            $outp = '';
 
             foreach ( $units as $key=>$unit ){
                 $outp .= '<option value="' . $unit . '"';
-                if( $unit == $selected ) { $outp .= ' selected="selected" '; }
+                if( $unit === $selected ) { $outp .= ' selected="selected" '; }
                 $outp .= '>' . $unit . '</option>' . "\n";
             }
-            if( ! in_array( $selected, $units )){
+            if( ! in_array( $selected, $units, true )){
                 $outp .= '<option value="' . $selected . '"  selected="selected" >' . $selected . '</option>\n';
             }
             return $outp;
         }
     
-        public function the_serving_unit_selection( $selected="" ) {
+        public function the_serving_unit_selection( $selected = '' ) {
             echo $this->get_the_serving_unit_selection( $selected );
         }
 

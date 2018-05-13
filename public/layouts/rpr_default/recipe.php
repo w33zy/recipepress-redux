@@ -7,7 +7,7 @@ Layout Name: RPR default
 Version: 0.2
 Description: The default layout. Despite being default this layout provides all the bits you need to display proper recipes. Structured meta data for search engine come standard. </br> Use the options below to finetune the look and feel of your recipes.
 */
-
+require RPR_PLUGIN_PATH . 'public/rpr_custom_json_ld.php';
 $printlink_class  = AdminPageFramework::getOption( 'rpr_options', array( 'layout', 'rpr_default', 'printlink_class' ), '.rpr_recipe' );
 $icon_display     = AdminPageFramework::getOption( 'rpr_options', array( 'layout', 'rpr_default', 'icon_display' ), false );
 ?>
@@ -27,7 +27,7 @@ if( recipe_is_embedded() ){ ?>
  * First thing we 'display' is the structured data header, so search engines
  * know this is a recipe:
  */
-the_rpr_structured_data_header();
+// the_rpr_structured_data_header();
 ?>
 
 <?php
@@ -160,10 +160,12 @@ the_rpr_recipe_date();
  * Last thing to render is the structured data footer, the end of the recipe
  * not only for search engines:
  */
-the_rpr_structured_data_footer();
+// the_rpr_structured_data_footer();
 ?>
 
-</div>	
+</div>
+
+<?php echo '<script type="application/ld+json">' . get_the_rpr_recipe_schema_data() . '</script>' ?>
 <!-- 
 ________________________________________________________________________________
 THIS IS OLD STUFF															  || 

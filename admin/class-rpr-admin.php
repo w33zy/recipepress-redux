@@ -167,7 +167,7 @@ class RPR_Admin {
 		//wp_enqueue_script( 'recipepress-reloaded', plugin_dir_url( __FILE__ ) . 'js/rpr-admin.js', array ( 'jquery' ), $this->version, false );
         global $post;
 
-        if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
+        if ( $hook === 'post-new.php' || $hook === 'post.php' ) {
             if ( 'rpr_recipe' === $post->post_type ) {
                 
                 wp_enqueue_script( 'recipepress-reloaded' . '_meta_ing_table', plugin_dir_url( __FILE__ ) . 'js/rpr-admin-ing-meta-table.js', array ( 'jquery' ), $this->version, false );
@@ -259,16 +259,8 @@ class RPR_Admin {
     		}
 			
 			//if(!isset($data)||$data==""){$data=$_POST;}
-			if( $recipe !== NULL && $recipe->post_type == 'rpr_recipe' )
-			{
-                            /**
-                             * This is for testing! REMOVE WHEN DONE!
-				echo "<pre>";
-				foreach( $data as $key => $value){
-					echo $key . "</br>";
-				}
-				//die;
-                             */
+			if( $recipe !== NULL && $recipe->post_type === 'rpr_recipe' ) {
+
 				$this->generalmeta->save_generalmeta( $recipe_id, $data, $recipe );
 
 				if( isset( $data['rpr_recipe_ingredients'] ) ) {
@@ -328,7 +320,7 @@ class RPR_Admin {
 			$num_recipes = wp_count_posts( 'rpr_recipe' );
 			
 			if( $num_recipes ) {
-				$published = intval( $num_recipes->publish );
+				$published = (int) $num_recipes->publish;
 				$post_type = get_post_type_object( 'rpr_recipe' );
 				
 				$text = _n( '%s ' . $post_type->labels->singular_name, '%s ' . $post_type->labels->name, $published, 'recipepress-reloaded' );
@@ -388,5 +380,49 @@ class RPR_Admin {
         $messages[ $post_type ][10] .= $preview_link;
     }
         return $messages;
+    }
+
+	public function clean_db() {
+		$all_ids = get_posts(array(
+			'fields'          => 'ids', // Only get post IDs
+			'posts_per_page'  => -1,
+			'post_type' => 'rpr_recipe',
+		));
+
+		$clean_content = array();
+		$dirty_content = array();
+
+		foreach ( $all_ids as $rpr_id ) {
+			$dirty_content[] = array(
+				'ID' => $rpr_id,
+				'post_content' => get_post_field( 'post_content', $rpr_id ),
+			);
+		}
+
+		foreach ( $dirty_content as $cleaned ) {
+			$clean_content[] = array(
+				'ID' => $cleaned['ID'],
+				'post_content' => stripslashes_deep( $cleaned['post_content'] ),
+			);
+		}
+
+		foreach ( $clean_content as $post ) {
+
+			$args = array(
+				'ID'           => $post['ID'],
+				'post_content' => $post['post_content']
+			);
+
+			wp_update_post( $args, true );
+
+			if ( is_wp_error( $post_id ) ) {
+				$errors = $post_id->get_error_messages();
+				foreach ( $errors as $error) {
+					echo $error;
+				}
+			}
+		}
+
+		return $clean_content;
     }
 }

@@ -35,6 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 const RPR_VERSION = '0.9.2';
 const RPR_DBVER = '';
+define( 'RPR_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
 /**
  * The code that runs during plugin activation.

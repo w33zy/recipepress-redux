@@ -80,7 +80,8 @@ class RPR_Options_Page_Metadata_Metadata {
 				'label'				=> array(
 					'microdata'	=> __( 'Microdata', 'recipepress-reloaded' ),
 					'rdfa'		=> __( 'RDFa', 'reciperess-reloaded' ),
-					'json-ld'	=> __( 'JSON-LD', 'reciperess-reloaded' )
+					'json-ld'	=> __( 'JSON-LD', 'reciperess-reloaded' ),
+					'none'      => __( 'None/Custom', 'reciperess-reloaded' ),
 				),
 				'default'			=> 'microdata'
 			)

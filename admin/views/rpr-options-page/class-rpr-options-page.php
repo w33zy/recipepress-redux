@@ -86,7 +86,7 @@ class RPR_Options_Page {
 			'RPR_Options_Page_General',
 			'RPR_Options_Page_Taxonomies',
 			'RPR_Options_Page_Metadata',
-                        'RPR_Options_Page_Units',
+	        'RPR_Options_Page_Units',
 			'RPR_Options_Page_Appearance',
 			// 'RPR_Options_Page_I18n',
 			'RPR_Options_Page_Advanced',
