@@ -119,7 +119,7 @@ class RPR_Admin_GeneralMeta {
 	public function do_metabox_notes( $recipe ) {
 		$description = get_post_meta( $recipe->ID, "rpr_recipe_notes", true );
 		$options = array(
-			'textarea_rows' => 4
+			'textarea_rows' => 16
 		);
 	    $options['media_buttons'] = true;
 
