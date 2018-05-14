@@ -98,7 +98,6 @@ function run_rpr() {
 
 	$plugin = new RPR();
 	$plugin->run();
-
 }
 
 run_rpr();
