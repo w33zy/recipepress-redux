@@ -651,7 +651,7 @@ if ( ! function_exists( 'get_the_rpr_recipe_description' ) ) {
 				$out .= '>';
 			}
 			//$out .= sanitize_post_field( 'rpr_recipe_description', $recipe['rpr_recipe_description'][0], $recipe_id );
-			$out .= stripslashes(get_the_content());
+			$out .= stripslashes( wpautop( get_the_content() ) );
 			//$out .= str_replace( "\'", '', $out );
 			//		$out .= apply_filters('the_content', $recipe['rpr_recipe_description'][0] );
 			$out .= '</div>';
@@ -933,7 +933,7 @@ if ( ! function_exists( 'get_the_rpr_recipe_ingredients' ) ) {
 
 		// Render the ingredient name
 		$out .= '<span name="rpr-ingredient-name">' . $term->name . '</span>';
-		$out .= $closing_tag; // @TODO
+		$out .= $closing_tag;
 
 		// Render the ingredient note
 		if ( isset( $ingredient['notes'] ) && $ingredient['notes'] !== '' ) {
@@ -1231,7 +1231,7 @@ if ( ! function_exists( 'get_the_rpr_recipe_instructions' ) ) {
 		/**
 		 * Render the instruction text
 		 */
-		$out .= '<span class="rpr-recipe-instruction-text' . $instr_class . '">' . esc_html( $instruction['description'] ) . '</span>';
+		$out .= '<div class="rpr-recipe-instruction-text' . $instr_class . '"><p>' . esc_html( $instruction['description'] ) . '</p></div>';
 
 		/**
 		 * Render the instruction step image
@@ -1317,7 +1317,7 @@ if ( ! function_exists( 'get_the_rpr_recipe_notes_headline' ) ) {
 		 * Exit if recipe has no notes:
 		 * isset returns true with empty strings, also check if notes is empty
 		 */
-		if ( isset( $recipe['rpr_recipe_notes'][0] ) && empty( $recipe['rpr_recipe_notes'][0] ) ) {
+		if ( ! isset( $recipe['rpr_recipe_notes'][0] ) && empty( $recipe['rpr_recipe_notes'][0] ) ) {
 			return;
 		}
 
@@ -1411,9 +1411,9 @@ if ( ! function_exists( 'get_the_rpr_recipe_notes' ) ) {
 		 * Render the notes only if it is not empty
 		 */
 		if ( isset( $recipe['rpr_recipe_notes'][0] ) && strlen( $recipe['rpr_recipe_notes'][0] ) > 0 ) {
-			$out .= '<span class="rpr_notes" >';
+			$out .= '<div class="rpr_notes" >';
 			$out .= apply_filters( 'the_content', $recipe['rpr_recipe_notes'][0] );
-			$out .= '</span>';
+			$out .= '</div>';
 		}
 
 		/**

@@ -7,7 +7,7 @@ Layout Name: RPR default
 Version: 0.2
 Description: The default layout. Despite being default this layout provides all the bits you need to display proper recipes. Structured meta data for search engine come standard. </br> Use the options below to finetune the look and feel of your recipes.
 */
-require RPR_PLUGIN_PATH . 'public/rpr_custom_json_ld.php';
+require_once RPR_PLUGIN_PATH . 'public/rpr_custom_json_ld.php';
 $printlink_class  = AdminPageFramework::getOption( 'rpr_options', array( 'layout', 'rpr_default', 'printlink_class' ), '.rpr_recipe' );
 $icon_display     = AdminPageFramework::getOption( 'rpr_options', array( 'layout', 'rpr_default', 'icon_display' ), false );
 ?>

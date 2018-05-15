@@ -410,10 +410,12 @@ class RPR_Admin {
 
 			$args = array(
 				'ID'           => $post['ID'],
-				'post_content' => $post['post_content']
+				'post_content' => $post['post_content'],
+				'post_excerpt' => '', //wp_trim_words( strip_tags( $post['post_content'] ), 35, '...' )
+
 			);
 
-			wp_update_post( $args, true );
+			$post_id = wp_update_post( $args, true );
 
 			if ( is_wp_error( $post_id ) ) {
 				$errors = $post_id->get_error_messages();
@@ -423,6 +425,6 @@ class RPR_Admin {
 			}
 		}
 
-		return $clean_content;
+		// return $clean_content;
     }
 }

@@ -14,6 +14,20 @@ function get_the_rpr_recipe_schema_data() {
 	$comments = get_comments( array(
 		'post_id' => $recipe_id,
 	) );
+	$course = '' !== get_the_rpr_taxonomy_terms( 'course', false, false, ', ', true )
+		? get_the_rpr_taxonomy_terms( 'course', false, false, ', ', true )
+		: 'Main Course';
+	$cuisine = '' !== get_the_rpr_taxonomy_terms( 'cuisine', false, false, ', ', true )
+		? get_the_rpr_taxonomy_terms( 'cuisine', false, false, ', ', true )
+		: 'American';
+	$_keyword = get_the_tags( $recipe_id );
+	if ( $_keyword ) {
+		foreach ( $_keyword as $keyword ) {
+			$keywords[] = $keyword->name;
+		}
+	}
+	$keywords = ! empty( $keywords ) ? $keywords : array( 'healthy vegan recipe' );
+
 	$data = array();
 
 	$data['@context']      = 'http://schema.org';
@@ -21,7 +35,10 @@ function get_the_rpr_recipe_schema_data() {
 	$data['name']          = get_the_title( $recipe_id );
 
 	$data['image']         = array(
-		get_the_post_thumbnail_url( $recipe_id )
+		get_the_post_thumbnail_url( $recipe_id, 'thumbnail' ),
+		get_the_post_thumbnail_url( $recipe_id, 'medium' ),
+		get_the_post_thumbnail_url( $recipe_id, 'savor-post-img-small' ),
+		get_the_post_thumbnail_url( $recipe_id, 'full' ),
 	);
 
 	$data['author']        = array(
@@ -42,22 +59,22 @@ function get_the_rpr_recipe_schema_data() {
 	$data['totalTime']     = rpr_format_time_xml( $recipe['rpr_recipe_prep_time'][0]
 	                                              + $recipe['rpr_recipe_cook_time'][0]
 	                                              +  $recipe['rpr_recipe_passive_time'][0] );
-	$data['keywords']      = 'cake for a party, coffee';
-	$data['recipeYield']   = esc_attr( $recipe['rpr_recipe_servings'][0] ) . ' ' . esc_attr( $recipe['rpr_recipe_servings_type'][0] );
-	$data['recipeCategory'] = get_the_rpr_taxonomy_terms( 'course', false, false, ', ', true );
-	$data['recipeCuisine']  = get_the_rpr_taxonomy_terms( 'cuisine', false, false, ', ', true );
+	$data['keywords']       = implode( ', ', $keywords );
+	$data['recipeYield']    = esc_attr( $recipe['rpr_recipe_servings'][0] ) . ' ' . esc_attr( $recipe['rpr_recipe_servings_type'][0] );
+	$data['recipeCategory'] = $course;
+	$data['recipeCuisine']  = $cuisine;
 
 	$data['nutrition']  = array(
-		'@type'     => 'NutritionInformation',
-		'calories'  => esc_attr( $recipe['rpr_recipe_calorific_value'][0] ),
-		'carbohydrateContent'  => esc_attr( $recipe['rpr_recipe_carbohydrate'][0] ),
+		'@type'               => 'NutritionInformation',
+		'calories'            => esc_attr( $recipe['rpr_recipe_calorific_value'][0] ),
+		'carbohydrateContent' => esc_attr( $recipe['rpr_recipe_carbohydrate'][0] ),
 		'cholesterolContent'  => esc_attr( $recipe['rpr_recipe_cholesterol'][0] ),
-		'fatContent'  => esc_attr( $recipe['rpr_recipe_fat'][0] ),
-		'fibreContent'  => esc_attr( $recipe['rpr_recipe_fibre'][0] ),
-		'proteinContent'  => esc_attr( $recipe['rpr_recipe_protein'][0] ),
-		'saturatedFatContent'  => esc_attr( $recipe['rpr_recipe_saturatedFat'][0] ),
-		'sodiumContent'  => esc_attr( $recipe['rpr_recipe_sodium'][0] ),
-		'sugarContent'  => esc_attr( $recipe['rpr_recipe_sugar'][0] ),
+		'fatContent'          => esc_attr( $recipe['rpr_recipe_fat'][0] ),
+		'fibreContent'        => esc_attr( $recipe['rpr_recipe_fibre'][0] ),
+		'proteinContent'      => esc_attr( $recipe['rpr_recipe_protein'][0] ),
+		'saturatedFatContent' => esc_attr( $recipe['rpr_recipe_saturatedFat'][0] ),
+		'sodiumContent'       => esc_attr( $recipe['rpr_recipe_sodium'][0] ),
+		'sugarContent'        => esc_attr( $recipe['rpr_recipe_sugar'][0] ),
 	);
 
 	foreach ( (array) $ingredients as $ingredient ) {
@@ -93,7 +110,7 @@ function get_the_rpr_recipe_schema_data() {
 		}
 	}
 
-	if ( isset( $GLOBALS['c_count'] ) && $GLOBALS['c_count'] > 1  ) {
+	if ( isset( $GLOBALS['c_count'] ) && $GLOBALS['c_count'] >= 1  ) {
 		$data['aggregateRating'] = array(
 			'@type' => 'AggregateRating',
 			'ratingValue' => number_format( $GLOBALS['rating'], 1, '.', ''),
@@ -101,7 +118,7 @@ function get_the_rpr_recipe_schema_data() {
 		);
 	}
 
-	$data['video'][] = array(
+	/*$data['video'][] = array(
 		'name' => get_the_title( $recipe_id ),
 		'description' => 'This is how you make a Party Coffee Cake.',
 		'thumbnailUrl' => array(
@@ -112,7 +129,7 @@ function get_the_rpr_recipe_schema_data() {
 		'contentUrl' => 'http://www.example.com/video123.flv',
         'embedUrl'   => 'http://www.example.com/videoplayer.swf?video=123',
         'uploadDate' => '2018-02-05T08:00:00+08:00',
-	);
+	);*/
 
 	$data = apply_filters( 'rcno_recipe_schema_data_filter', $data );
 

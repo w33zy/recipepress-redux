@@ -58,12 +58,12 @@ class RPR_RecipePostType extends AdminPageFramework_PostType{
          * Check which of wp core's taxonomies to use;
          */
         $taxonomies = array();
-        if( AdminPageFramework::getOption( 'rpr_options', array( 'tax_builtin', 'category', 'use' ) , false ) ){
-            array_push($taxonomies, 'category' );
-        }
-        if( AdminPageFramework::getOption( 'rpr_options', array( 'tax_builtin', 'post_tag', 'use' ) , false ) ){
-            array_push($taxonomies, 'post_tag' );
-        }
+	     if ( AdminPageFramework::getOption( 'rpr_options', array( 'tax_builtin', 'category', 'use' ), false ) ) {
+		     $taxonomies[] = 'category';
+	     }
+	     if ( AdminPageFramework::getOption( 'rpr_options', array( 'tax_builtin', 'post_tag', 'use' ), false ) ) {
+		     $taxonomies[] = 'post_tag';
+	     }
         
         /** 
          * Setup the post type
@@ -86,15 +86,14 @@ class RPR_RecipePostType extends AdminPageFramework_PostType{
                     'plugin_listing_table_title_cell_link' => __( 'RPR recipe post type', 'recipepress-reloaded' ), // (framework specific key). [3.0.6+]
                 ),
                 'supports'      => array( 'title', 'editor', 'comments', 'thumbnail', 'excerpt', 'featured', 'author' ),
-                //'supports'      => array( 'title', 'editor', 'comments', 'thumbnail', 'excerpt' ),
                 'public'        => true,
-                'menu_icon'     => plugins_url( 'img/logo_16x16.png', dirname( __FILE__ ) ),
-                'screen_icon'   => dirname( __FILE__  ) . '/img/logo_32x32.png', // a file path can be passed instead of a url, plugins_url( 'asset/image/wp-logo_32x32.png', APFDEMO_FILE )
-                'menu_position' => 5, 
+                'menu_icon'     => plugins_url( 'img/logo_16x16.png',  __DIR__ ),
+                'screen_icon'   => __DIR__ . '/img/logo_32x32.png',
+                'menu_position' => 5,
                 'has_archive'   => true, 
                 'taxonomies'    => $taxonomies,
                 'rewrite'       => array(
-                    'slug' => sanitize_title( AdminPageFramework::getOption( 'rpr_options', array( 'general', 'slug') , 'recipe' ) )
+                    'slug' => sanitize_title( AdminPageFramework::getOption( 'rpr_options', array( 'general', 'slug' ) , 'recipe' ) )
                 ),
  
             )    
@@ -141,14 +140,14 @@ class RPR_RecipePostType extends AdminPageFramework_PostType{
                         
             // Only add if singular and slug are set:
             if( isset( $taxonomy['singular'] ) && 
-                '' != (string) $taxonomy['singular'] &&
+                '' !== (string) $taxonomy['singular'] &&
                 isset( $taxonomy['slug'] ) && 
-                '' != (string) $taxonomy['slug']){
+                '' !== (string) $taxonomy['slug']){
            
                 $name = sanitize_text_field( $taxonomy['singular'] );
                 
                 if( isset( $taxonomy['plural'] ) && 
-                '' != (string) $taxonomy['plural']) {
+                '' !== (string) $taxonomy['plural']) {
                     $plural = sanitize_text_field( $taxonomy['plural'] );
                 } else {
                     $plural = $name . __( 's', 'recipepress-reloaded' );
