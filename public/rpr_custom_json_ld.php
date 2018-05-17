@@ -34,6 +34,7 @@ function get_the_rpr_recipe_schema_data() {
 	$data['@type']         = 'Recipe';
 	$data['name']          = get_the_title( $recipe_id );
 
+	// Images
 	$data['image']         = array(
 		get_the_post_thumbnail_url( $recipe_id, 'thumbnail' ),
 		get_the_post_thumbnail_url( $recipe_id, 'medium' ),
@@ -41,9 +42,11 @@ function get_the_rpr_recipe_schema_data() {
 		get_the_post_thumbnail_url( $recipe_id, 'full' ),
 	);
 
+	//Author
 	$data['author']        = array(
 		'@type'  => 'Person',
 		'name'   => get_the_author_meta( 'display_name' ),
+		'url'    => get_site_url(),
 		'sameAs' => array(
 			get_the_author_meta( 'googleplus' ),
 			get_the_author_meta( 'twitter' ),
@@ -64,6 +67,7 @@ function get_the_rpr_recipe_schema_data() {
 	$data['recipeCategory'] = $course;
 	$data['recipeCuisine']  = $cuisine;
 
+	// Nutrition
 	$data['nutrition']  = array(
 		'@type'               => 'NutritionInformation',
 		'calories'            => esc_attr( $recipe['rpr_recipe_calorific_value'][0] ),
@@ -77,10 +81,12 @@ function get_the_rpr_recipe_schema_data() {
 		'sugarContent'        => esc_attr( $recipe['rpr_recipe_sugar'][0] ),
 	);
 
+	// Ingredients
 	foreach ( (array) $ingredients as $ingredient ) {
 		$data['recipeIngredient'][] = $ingredient['amount'] . ' ' . $ingredient['unit']  . ' ' . $ingredient['ingredient'] . ' '. $ingredient['notes'];
 	}
 
+	// Instructions
 	foreach ( (array) $instructions as $instruction ) {
 		$data['recipeInstructions'][] = array(
 			'@type' => 'HowToStep',
@@ -88,6 +94,7 @@ function get_the_rpr_recipe_schema_data() {
 		);
 	}
 
+	// Review
 	if ( count( $comments ) > 1  ) {
 		foreach ( $comments as $comment ) {
 			if ( (int) $comment->comment_karma > 0 ) {
@@ -110,6 +117,7 @@ function get_the_rpr_recipe_schema_data() {
 		}
 	}
 
+	// Aggregate rating
 	if ( isset( $GLOBALS['c_count'] ) && $GLOBALS['c_count'] >= 1  ) {
 		$data['aggregateRating'] = array(
 			'@type' => 'AggregateRating',
@@ -118,6 +126,7 @@ function get_the_rpr_recipe_schema_data() {
 		);
 	}
 
+	// Video
 	/*$data['video'][] = array(
 		'name' => get_the_title( $recipe_id ),
 		'description' => 'This is how you make a Party Coffee Cake.',
@@ -130,6 +139,12 @@ function get_the_rpr_recipe_schema_data() {
         'embedUrl'   => 'http://www.example.com/videoplayer.swf?video=123',
         'uploadDate' => '2018-02-05T08:00:00+08:00',
 	);*/
+
+	// Diet
+	$data['suitableForDiet'] = array(
+		'http://schema.org/GlutenFreeDiet',
+		'http://schema.org/VeganDiet'
+	);
 
 	$data = apply_filters( 'rcno_recipe_schema_data_filter', $data );
 
