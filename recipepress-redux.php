@@ -13,7 +13,7 @@
  * @package           recipepress-reloaded
  *
  * @wordpress-plugin
- * Plugin Name:       RecipePress reloaded
+ * Plugin Name:       RecipePress Redux
  * Plugin URI:        http://tech.cbjck.de/wp-plugins/rpr/
  * Description:       The swiss army knife for your food blog. A tool not only to add nicely and seo friendly formatted  recipes to your posts. But also to manage present your recipe collection.
  * Version:           0.9.2
