@@ -222,61 +222,57 @@ class RPR_Admin {
      * @param int   $recipe_id  Post-Id of recipe to save
      * @param mixed $recipe     The $recipe post object
      * @since 0.8.0
+     *
+     * @return mixed
      */
     public function save_recipe( $recipe_id, $recipe = NULL ){
         remove_action('save_post', array($this, 'save_recipe'));
 
     	$data=$_POST;
 
-        /**
-         *  This is done for testing! REMOVE WHEN DONE!
-		 */
-        //var_dump( $_POST);
-        //die;
-        //var_dump( $recipe );
-			//die;
-		if( $recipe !== NULL && $recipe->post_type == 'rpr_recipe' ) {
+		if( $recipe !== NULL && $recipe->post_type === 'rpr_recipe' ) {
     		$errors = false;
     		// verify if this is an auto save routine.
-    		// If it is our form has not been submitted, so we dont want to do anything
-    		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
-    			$errors = "There was an error doing autosave";
+    		// If it is our form has not been submitted, so we don't want to do anything
+    		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+    			$errors = 'There was an error doing autosave';
+    		}
 
     		//Verify the nonces for the metaboxes
-    		if ( isset( $data['rpr_save_recipe_meta_field'] ) &&  !wp_verify_nonce( $data['rpr_save_recipe_meta_field'], 'rpr_save_recipe_meta' ) ){
-    			$errors = "There was an error saving the recipe. Description nonce not verified";
+    		if ( isset( $data['rpr_save_recipe_meta_field'] ) &&  ! wp_verify_nonce( $data['rpr_save_recipe_meta_field'], 'rpr_save_recipe_meta' ) ){
+    			$errors = 'There was an error saving the recipe. Description nonce not verified';
     		}
 			
 			// Check permissions
-    		if ( !current_user_can( 'edit_post', $recipe_id ) ){
-    			$errors = "There was an error saving the recipe. No sufficient rights.";
+    		if ( ! current_user_can( 'edit_post', $recipe_id ) ){
+    			$errors = 'There was an error saving the recipe. No sufficient rights.';
     		}
 
     		//If we have an error update the error_option and return
-    		if( $errors ) {
-    			update_option('rpr_admin_errors', $errors);
+    		if ( $errors ) {
+    			update_option( 'rpr_admin_errors', $errors );
     			return $recipe_id;
     		}
 			
 			//if(!isset($data)||$data==""){$data=$_POST;}
-			if( $recipe !== NULL && $recipe->post_type === 'rpr_recipe' ) {
+			if ( $recipe !== NULL && $recipe->post_type === 'rpr_recipe' ) {
 
 				$this->generalmeta->save_generalmeta( $recipe_id, $data, $recipe );
 
-				if( isset( $data['rpr_recipe_ingredients'] ) ) {
+				if ( isset( $data['rpr_recipe_ingredients'] ) ) {
 					$this->ingredients->save_ingredients( $recipe_id, $data['rpr_recipe_ingredients'] );
 				}
-				if( isset( $data['rpr_recipe_instructions'] ) ) {
+				if ( isset( $data['rpr_recipe_instructions'] ) ) {
 					$this->instructions->save_instructions( $recipe_id, $data['rpr_recipe_instructions']);
 				}
 
-				if( AdminPageFramework::getOption( 'rpr_options', array( 'metadata', 'use_nutritional_data') , false ) ) {
+				if ( AdminPageFramework::getOption( 'rpr_options', array( 'metadata', 'use_nutritional_data') , false ) ) {
 					$this->nutrition->save_nutritionalmeta($recipe_id, $data, $recipe);
 				}
-                if( AdminPageFramework::getOption( 'rpr_options', array( 'metadata', 'use_source') , false ) ) {
+                if ( AdminPageFramework::getOption( 'rpr_options', array( 'metadata', 'use_source') , false ) ) {
 					$this->source->save_sourcemeta($recipe_id, $data, $recipe);
 				}
-				//die;
+
 				add_action('save_post', array($this, 'save_recipe'));
 			}
 		}
@@ -291,12 +287,12 @@ class RPR_Admin {
 
 		$errors = get_option('rpr_admin_errors');
 
-		if($errors) {
-			echo '<div class="error"><p>' . $errors . '</p></div>';
+		if ( $errors ) {
+			echo '<div class="notice notice-error is-dismissible"><p>' . $errors . '</p></div>';
 		}
 		
 		// Reset the error option for the next error
-		update_option('rpr_admin_errors', false);
+		update_option( 'rpr_admin_errors', false );
 	}
 
 	/**
@@ -304,8 +300,9 @@ class RPR_Admin {
 	 * 
 	 * @since 0.8.3
 	 * @param array $query_args
+	 * @return array
 	 */
-	public function add_to_dashboard_recent_posts_widget( $query_args ) {
+	public function add_to_dashboard_recent_posts_widget( array $query_args ) {
 		$query_args =  array_merge( $query_args, array( 'post_type' => array( 'post', 'rpr_recipe' ) ));
 		return $query_args;
 	}
@@ -315,8 +312,9 @@ class RPR_Admin {
 	 * 
 	 * @since 0.8.3
 	 * @param array $items
+	 * @return array
 	 */
-	public function add_recipes_glance_items( $items = array() ) {
+	public function add_recipes_glance_items( array $items ) {
 			$num_recipes = wp_count_posts( 'rpr_recipe' );
 			
 			if( $num_recipes ) {

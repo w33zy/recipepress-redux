@@ -641,21 +641,19 @@ if ( ! function_exists( 'get_the_rpr_recipe_description' ) ) {
 		/**
 		 * Render the description only if it is not empty
 		 */
-		if ( strlen( $recipe['rpr_recipe_description'][0] ) > 0 ) {
-			$out .= '<div class="rpr_description" ';
-			if ( AdminPageFramework::getOption( 'rpr_options', array( 'metadata', 'structured_data_format' ), 'microdata' ) === 'microdata' ) {
-				$out .= ' itemprop="description" >';
-			} elseif ( AdminPageFramework::getOption( 'rpr_options', array(	'metadata',	'structured_data_format' ), 'microdata' ) === 'rdfa' ) {
-				$out .= ' property="description" >';
-			} else {
-				$out .= '>';
-			}
-			//$out .= sanitize_post_field( 'rpr_recipe_description', $recipe['rpr_recipe_description'][0], $recipe_id );
-			$out .= stripslashes( wpautop( get_the_content() ) );
-			//$out .= str_replace( "\'", '', $out );
-			//		$out .= apply_filters('the_content', $recipe['rpr_recipe_description'][0] );
-			$out .= '</div>';
+		$out .= '<div class="rpr_description" ';
+		if ( AdminPageFramework::getOption( 'rpr_options', array( 'metadata', 'structured_data_format' ), 'microdata' ) === 'microdata' ) {
+			$out .= ' itemprop="description" >';
+		} elseif ( AdminPageFramework::getOption( 'rpr_options', array(	'metadata',	'structured_data_format' ), 'microdata' ) === 'rdfa' ) {
+			$out .= ' property="description" >';
+		} else {
+			$out .= '>';
 		}
+		//$out .= sanitize_post_field( 'rpr_recipe_description', $recipe['rpr_recipe_description'][0], $recipe_id );
+		$out .= stripslashes( wpautop( get_the_content() ) );
+		//$out .= str_replace( "\'", '', $out );
+		//		$out .= apply_filters('the_content', $recipe['rpr_recipe_description'][0] );
+		$out .= '</div>';
 
 		/**
 		 * Return the rendered description

@@ -27,6 +27,7 @@ function get_the_rpr_recipe_schema_data() {
 		}
 	}
 	$keywords = ! empty( $keywords ) ? $keywords : array( 'healthy vegan recipe' );
+	$description = get_post_field( 'post_excerpt' );
 
 	$data = array();
 
@@ -56,7 +57,7 @@ function get_the_rpr_recipe_schema_data() {
 	);
 
 	$data['datePublished'] = get_the_date( 'c', $recipe_id );
-	$data['description']   = strip_tags( strip_shortcodes( $recipe['rpr_recipe_description'][0] ) );
+	$data['description']   = '' !== $description ? $description : strip_tags( strip_shortcodes( $recipe['rpr_recipe_description'][0] ) );
 	$data['prepTime']      = rpr_format_time_xml( $recipe['rpr_recipe_prep_time'][0] );
 	$data['cookTime']      = rpr_format_time_xml( $recipe['rpr_recipe_cook_time'][0] );
 	$data['totalTime']     = rpr_format_time_xml( $recipe['rpr_recipe_prep_time'][0]
